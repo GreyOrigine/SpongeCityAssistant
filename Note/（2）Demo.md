@@ -92,3 +92,50 @@ git checkout 3028f07cb79e5b1d7342f4ad8d11efad3fd13d17
 - internlm2-chat-1_8b
 - 创作一个 300 字的小故事
 - ![](C:/Users/LTstatu/Desktop/Capture d’écran 2024-04-05 181609.png)
+
+## web demo
+
+### 连结SSH
+
+- 先查询端口，再根据端口键入命令 
+- 复制密码
+
+### 安装openSSH
+
+1. 打开 PowerShell 作为管理员。在开始菜单中搜索 PowerShell，并右键单击它，然后选择“以管理员身份运行”。
+2. 在 PowerShell 中运行以下命令来安装 OpenSSH 客户端：
+
+```
+bashCopy code
+Add-WindowsCapability -Online -Name OpenSSH.Client
+```
+
+### 路径问题
+
+1. **使用完整路径运行 SSH 客户端**：如果您知道 SSH 客户端的安装路径，可以在 PowerShell 中使用完整路径来运行它。例如，如果您使用的是 OpenSSH 客户端并且安装在默认位置，您可以尝试以下命令：
+
+```
+bashCopy code
+C:\Windows\System32\OpenSSH\ssh -CNg -L 6006:127.0.0.1:6006 root@ssh.intern-ai.org.cn -p 41361
+```
+
+2. 将 SSH 客户端的路径添加到系统环境变量中
+
+3. streamlit问题
+
+   ```
+   streamlit run /root/Tutorial/helloworld/bajie_chat.py --server.address 127.0.0.1 --server.port 6006 bash: streamlit: command not found
+   ```
+
+   ```
+   pip install streamlit
+   ```
+
+   **确保 `bajie_chat.py` 存在**：确认您要运行的 Python 脚本 `bajie_chat.py` 是否存在于指定的路径 `/root/Tutorial/helloworld/` 中，并且文件名拼写正确。
+
+   **使用绝对路径**：作为一种临时解决方案，您可以尝试使用 `streamlit` 的绝对路径来运行它，而不是依赖系统路径。例如：
+
+   ```
+   bashCopy code
+   /root/your/path/to/streamlit run /root/Tutorial/helloworld/bajie_chat.py --server.addre
+   ```

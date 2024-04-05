@@ -139,3 +139,13 @@ C:\Windows\System32\OpenSSH\ssh -CNg -L 6006:127.0.0.1:6006 root@ssh.intern-ai.o
    bashCopy code
    /root/your/path/to/streamlit run /root/Tutorial/helloworld/bajie_chat.py --server.addre
    ```
+
+### 连结时长
+
+- 在本地powershell中输入ssh -CNg -L 6006:127.0.0.1:6006 root@ssh.intern-ai.org.cn -p 41361，很长时间才有相应
+- 且没有密码验证
+- 但是效果ok
+
+![](C:/Users/LTstatu/Desktop/Capture d’écran 2024-04-05 211559.png)
+
+![](C:/Users/LTstatu/Desktop/Capture d’écran 2024-04-05 212046.png)

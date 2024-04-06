@@ -133,7 +133,7 @@ C:\Windows\System32\OpenSSH\ssh -CNg -L 6006:127.0.0.1:6006 root@ssh.intern-ai.o
 
    **确保 `bajie_chat.py` 存在**：确认您要运行的 Python 脚本 `bajie_chat.py` 是否存在于指定的路径 `/root/Tutorial/helloworld/` 中，并且文件名拼写正确。
 
-   **使用绝对路径**：作为一种临时解决方案，您可以尝试使用 `streamlit` 的绝对路径来运行它，而不是依赖系统路径。例如：
+   **使用绝对路径**：作为一种临时解决方案，尝试使用 `streamlit` 的绝对路径来运行它，而不是依赖系统路径。例如：
 
    ```
    bashCopy code
@@ -142,10 +142,276 @@ C:\Windows\System32\OpenSSH\ssh -CNg -L 6006:127.0.0.1:6006 root@ssh.intern-ai.o
 
 ### 连结时长
 
-- 在本地powershell中输入ssh -CNg -L 6006:127.0.0.1:6006 root@ssh.intern-ai.org.cn -p 41361，很长时间才有相应
-- 且没有密码验证
-- 但是效果ok
+- 在本地powershell中输入命令，很长时间才有响应（取决于算力大小，50%响应很快）
+- 没有密码验证
 
 ![](C:/Users/LTstatu/Desktop/Capture d’écran 2024-04-05 211559.png)
 
 ![](C:/Users/LTstatu/Desktop/Capture d’écran 2024-04-05 212046.png)
+
+## 可选参考
+
+###  `pip `换源，需要临时使用镜像源安装
+
+```
+pip install -i https://mirrors.cernet.edu.cn/pypi/web/simple some-package
+#some-package 为需要安装的包名
+```
+
+### 设置 `pip` 默认镜像源
+
+升级 `pip` 到最新的版本 (>=10.0.0) 后进行配置
+
+```
+python -m pip install --upgrade pip
+pip config set global.index-url   https://mirrors.cernet.edu.cn/pypi/web/simple
+```
+
+### `pip` 默认源的网络连接较差
+
+可临时使用镜像源升级 `pip`
+
+```
+python -m pip install -i https://mirrors.cernet.edu.cn/pypi/web/simple --upgrade pip
+```
+
+### `conda` 换源
+
+镜像站提供了 `Anaconda` 仓库与第三方源（`conda-forge`、`msys2`、`pytorch` 等），各系统都可以通过修改用户目录下的 `.condarc` 文件来使用镜像站
+
+```
+Windows: C:\Users\<YourUserName>\.condarc
+```
+
+- Windows 用户无法直接创建名为 `.condarc` 的文件，可先执行 `conda config --set show_channel_urls yes` 生成该文件之后再修改。
+
+终端快速配置
+
+```
+cat <<'EOF' > ~/.condarc
+channels:
+- defaults
+show_channel_urls: true
+default_channels:
+- https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main
+- https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/r
+- https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/msys2
+custom_channels:
+conda-forge: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
+pytorch: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
+EOF
+```
+
+快速配置后出现错误，删除错误行即可
+
+```
+ConfigurationLoadError: Unable to load configuration file.
+  path: C:\Users\LTstatu\.condarc
+  reason: invalid yaml at line 1, column 8
+
+```
+
+
+
+### **HuggingFace模型下载**
+
+conda换源为必要步骤，否则会在下载config文件时失败
+
+#### 指定文件夹下创建虚拟环境
+
+```
+conda create -p D:\Projec_test\SpongeCityAssistant\SpongeScript
+```
+
+- 问题：Win10下Anaconda使用conda activate报错
+
+```
+CommandNotFoundError: Your shell has not been properly configured to use 'conda activate'.
+If using 'conda activate' from a batch script, change your
+invocation to 'CALL conda.bat activate'.
+
+To initialize your shell, run
+
+    $ conda init <SHELL_NAME>
+
+Currently supported shells are:
+  - bash
+  - cmd.exe
+  - fish
+  - tcsh
+  - xonsh
+  - zsh
+  - powershell
+```
+
+- 按照提示依然报错
+
+```
+$ conda init <SHELL NAME>
+bash: syntax error near unexpected token `newline'
+
+```
+
+- 输入
+
+```
+conda init cmd.exe
+conda init powershell
+```
+
+- 重启cmd
+
+```
+$ conda init cmd.exe
+no change     D:\software\anaconda3\Scripts\conda.exe
+no change     D:\software\anaconda3\Scripts\conda-env.exe
+no change     D:\software\anaconda3\Scripts\conda-script.py
+no change     D:\software\anaconda3\Scripts\conda-env-script.py
+no change     D:\software\anaconda3\condabin\conda.bat
+no change     D:\software\anaconda3\Library\bin\conda.bat
+no change     D:\software\anaconda3\condabin\_conda_activate.bat
+no change     D:\software\anaconda3\condabin\rename_tmp.bat
+no change     D:\software\anaconda3\condabin\conda_auto_activate.bat
+no change     D:\software\anaconda3\condabin\conda_hook.bat
+no change     D:\software\anaconda3\Scripts\activate.bat
+no change     D:\software\anaconda3\condabin\activate.bat
+no change     D:\software\anaconda3\condabin\deactivate.bat
+no change     D:\software\anaconda3\Scripts\activate
+no change     D:\software\anaconda3\Scripts\deactivate
+modified      D:\software\anaconda3\etc\profile.d\conda.sh
+no change     D:\software\anaconda3\etc\fish\conf.d\conda.fish
+no change     D:\software\anaconda3\shell\condabin\Conda.psm1
+no change     D:\software\anaconda3\shell\condabin\conda-hook.ps1
+no change     D:\software\anaconda3\Lib\site-packages\xontrib\conda.xsh
+no change     D:\software\anaconda3\etc\profile.d\conda.csh
+no change     HKEY_CURRENT_USER\Software\Microsoft\Command Processor\AutoRun
+
+==> For changes to take effect, close and re-open your current shell. <==
+```
+
+- 再激活指定文件夹下的虚拟环境
+
+```
+conda activate D:\Projec_test\SpongeCityAssistant\Projec_testSpongeCityAssistantSpongeScript
+```
+
+- 无效
+
+#### 可行解决方法
+
+```
+change your invocation to 'CALL conda.bat activate'.
+```
+
+打开Anaconda Prompt的命令行界面, 输入[conda](https://so.csdn.net/so/search?q=conda&spm=1001.2101.3001.7020) activate语句即可
+
+![image-20240406155352099](C:/Users/LTstatu/AppData/Roaming/Typora/typora-user-images/image-20240406155352099.png)
+
+#### 使用官方命令行工具安装
+
+```
+pip install -U huggingface_hub
+```
+
+#### 新建 `python` 文件，填入代码并运行
+
+- resume-download：断点续下
+
+- local-dir：本地存储路径。
+
+- ```
+  import os
+  # 下载模型
+  os.system('huggingface-cli download --resume-download internlm/internlm2-chat-7b --local-dir your_path')
+  ```
+
+  怎样使用模型部分文件
+
+  ```
+  import os 
+  from huggingface_hub import hf_hub_download  # Load model directly 
+  
+  hf_hub_download(repo_id="internlm/internlm2-7b", filename="config.json")
+  ```
+
+#### 问题
+
+```
+Traceback (most recent call last):
+  File "D:\software\anaconda3\envs\SpongeScript\download.py", line 8, in <module>
+    hf_hub_download(repo_id="internlm/internlm2-7b", filename="config.json")
+  File "D:\software\anaconda3\lib\site-packages\huggingface_hub\utils\_validators.py", line 119, in _inner_fn
+    return fn(*args, **kwargs)
+  File "D:\software\anaconda3\lib\site-packages\huggingface_hub\file_download.py", line 1406, in hf_hub_download
+    raise LocalEntryNotFoundError(
+huggingface_hub.utils._errors.LocalEntryNotFoundError: An error happened while trying to locate the file on the Hub and we cannot find the requested files in the local cache. Please check your connection and try again or make sure your Internet connection is on.
+```
+
+问题解决参考链接
+
+- [【秒解决！！huggingface_hub.utils._errors.LocalEntryNotFoundError】-CSDN博客](https://blog.csdn.net/weixin_44257107/article/details/136532423)
+
+- https://github.com/Stability-AI/generative-models/issues/215#issuecomment-1960803222
+
+```
+#python文件中设置环境
+os.environ["HF_ENDPOINT"] = "https://hf-mirror.com"
+#终端输入
+HF_ENDPOINT=https://hf-mirror.com python download.py
+```
+
+### **ModelScope**安装
+
+#### 使用 `modelscope` 中的 `snapshot_download` 函数下载模型
+
+第一个参数为模型名称，参数 `cache_dir` 为模型的下载路径。
+
+注意：`cache_dir` 最好为绝对路径。
+
+安装依赖：
+
+```
+pip install modelscope==1.9.5
+pip install transformers==4.35.2
+```
+
+#### 在当前目录下新建 `python` 文件，填入代码并运行
+
+```
+import torch
+from modelscope import snapshot_download, AutoModel, AutoTokenizer
+import os
+model_dir = snapshot_download('Shanghai_AI_Laboratory/internlm2-chat-7b', cache_dir='your path', revision='master')
+```
+
+### **OpenXLab**
+
+`OpenXLab` 可以通过指定模型仓库的地址，以及需要下载的文件的名称，文件所需下载的位置等，直接下载模型权重文件，使用 `download` 函数导入模型中心的模型。
+
+```
+import torch
+import os
+from transformers import AutoModelForCausalLM, AutoTokenizer, AutoModel
+base_path = './local_files'
+os.system('apt install git')
+os.system('apt install git-lfs')
+os.system(f'git clone https://code.openxlab.org.cn/Usr_name/repo_name.git {base_path}')
+os.system(f'cd {base_path} && git lfs pull')
+```
+
+
+
+### **软链接清除方法**
+
+当我们建立安全链接之后，如果想要将其删除可以选择以下命令：
+
+```
+unlink link_name
+```
+
+删除软链接 `/root/demo/internlm2-chat-7b` 时：
+
+```
+cd /root/demo/
+unlink internlm2-chat-7b
+```
